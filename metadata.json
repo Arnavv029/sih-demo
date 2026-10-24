@@ -1,0 +1,6 @@
+{
+  "name": "AICTE Intelligent Application Verification Platform",
+  "description": "Modern AICTE portal and evidence-led application verification system featuring DocuPass reusable document verification, category-specific approval workflows, and real-time application tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
