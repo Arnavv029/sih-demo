@@ -15,6 +15,7 @@ import {
   XCircle,
   RotateCcw,
   FileCheck2,
+  Sparkles,
 } from 'lucide-react';
 import {
   getCategorySchema,
@@ -31,6 +32,7 @@ export default function ApplicationDetailView({
   onReuploadDocument,
   onOfficerAction,
   onRunVerificationAnalysis,
+  onOpenRagAssistant,
 }) {
   const [activeTab, setActiveTab] = useState('overview'); // overview | report | findings | audit
   const [previewDoc, setPreviewDoc] = useState(null);
@@ -135,6 +137,22 @@ export default function ApplicationDetailView({
 
             {/* Officer Primary Verification & Analysis Trigger Button */}
             <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() =>
+                  onOpenRagAssistant &&
+                  onOpenRagAssistant(
+                    `For application ${application.id} (${application.categoryTitle}, ${application.clause}): What are the statutory compliance benchmarks, mandatory document standards, and deficiency triggers?`,
+                    application.clause
+                  )
+                }
+                className="px-3.5 py-2 text-xs font-semibold text-blue-900 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+                title="Consult AICTE Regulatory RAG Assistant"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-blue-700" />
+                <span>Consult Regulatory RAG</span>
+              </button>
+
               <button
                 type="button"
                 onClick={handleStartVerificationAnalysis}
@@ -535,14 +553,31 @@ export default function ApplicationDetailView({
                         <span>·</span>
                         <span className="text-slate-500">{doc.fileSize}</span>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => setPreviewDoc(doc)}
-                        className="px-2.5 py-1 text-xs font-semibold text-blue-950 bg-slate-100 hover:bg-slate-200 rounded inline-flex items-center gap-1 cursor-pointer"
-                      >
-                        <Eye className="w-3.5 h-3.5" aria-hidden="true" />
-                        <span>Inspect Document &amp; OCR</span>
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            onOpenRagAssistant &&
+                            onOpenRagAssistant(
+                              `What are the mandatory AICTE regulatory requirements and verification criteria for "${doc.title}" under ${application.clause}?`,
+                              application.clause
+                            )
+                          }
+                          className="px-2.5 py-1 text-xs font-semibold text-blue-900 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded inline-flex items-center gap-1 cursor-pointer"
+                          title="Query AICTE Knowledge Base for norms regarding this document"
+                        >
+                          <Sparkles className="w-3.5 h-3.5 text-blue-700" />
+                          <span>RAG Norms</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setPreviewDoc(doc)}
+                          className="px-2.5 py-1 text-xs font-semibold text-blue-950 bg-slate-100 hover:bg-slate-200 rounded inline-flex items-center gap-1 cursor-pointer"
+                        >
+                          <Eye className="w-3.5 h-3.5" aria-hidden="true" />
+                          <span>Inspect Document &amp; OCR</span>
+                        </button>
+                      </div>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-600">

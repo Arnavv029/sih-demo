@@ -10,6 +10,7 @@ import {
   PlusCircle,
   CheckCircle2,
   X,
+  Sparkles,
 } from 'lucide-react';
 import { AicteCrestIcon } from './AicteEmblem.jsx';
 import { APPLICATION_CATEGORIES } from '../utils/aicteLogic.js';
@@ -17,6 +18,7 @@ import { APPLICATION_CATEGORIES } from '../utils/aicteLogic.js';
 export default function LandingPage({
   onNavigateLogin,
   onQuickStartCategory,
+  onOpenRagAssistant,
 }) {
   const [rulesModalOpen, setRulesModalOpen] = useState(false);
   const [selectedRuleCategory, setSelectedRuleCategory] = useState('eoa');
@@ -95,6 +97,14 @@ export default function LandingPage({
         </nav>
 
         <div className="flex items-center gap-3 shrink-0">
+          <button
+            type="button"
+            onClick={() => onOpenRagAssistant && onOpenRagAssistant()}
+            className="px-3.5 py-2 text-xs font-semibold text-blue-950 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors inline-flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-blue-700" />
+            <span>AI Regulatory Assistant (RAG)</span>
+          </button>
           <button
             type="button"
             onClick={() => onNavigateLogin('institution')}
@@ -261,14 +271,30 @@ export default function LandingPage({
 
                     <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
                       <span className="text-xs text-slate-500">{cat.meta}</span>
-                      <button
-                        type="button"
-                        onClick={() => onQuickStartCategory(cat.id)}
-                        className="text-xs font-semibold text-blue-950 hover:text-blue-800 inline-flex items-center gap-1 whitespace-nowrap cursor-pointer"
-                      >
-                        <span>Apply</span>
-                        <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                      </button>
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            onOpenRagAssistant &&
+                            onOpenRagAssistant(
+                              `What are the specific requirements, documents, and compliance norms for ${cat.title} (${cat.clause})?`,
+                              cat.clause
+                            )
+                          }
+                          className="text-[11px] font-medium text-slate-600 hover:text-blue-950 inline-flex items-center gap-1 cursor-pointer"
+                        >
+                          <Sparkles className="w-3 h-3 text-amber-500" />
+                          <span>Ask RAG</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onQuickStartCategory(cat.id)}
+                          className="text-xs font-semibold text-blue-950 hover:text-blue-800 inline-flex items-center gap-1 whitespace-nowrap cursor-pointer"
+                        >
+                          <span>Apply</span>
+                          <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 );

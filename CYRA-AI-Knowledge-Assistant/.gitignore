@@ -1,0 +1,32 @@
+# secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.hypothesis/
+
+# generated data (rebuild with: python -m backend.ingestion.run)
+data/
+
+# node
+node_modules/
+frontend/dist/
+
+# misc
+*.log
+.DS_Store
+Thumbs.db
+
+# Local backup files
+*.bak
+
+# AICTE handbook: exclude until redistribution rights are confirmed
+corpus/APH_Final.pdf

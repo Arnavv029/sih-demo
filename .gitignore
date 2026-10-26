@@ -1,15 +1,38 @@
+# Dependencies
 node_modules/
+**/node_modules/
+
+# Production build artifacts
+dist/
+**/dist/
 build/
-dist/
-coverage/
-.DS_Store
-*.log
-.env*
-!.env.example
-.aistudio/
-**/aistudio/
-node_modules/
-dist/
+**/build/
+
+# Environment and secrets
 .env
 .env.*
 !.env.example
+**/.*env
+**/.*env.*
+!**/.*env.example
+*.pem
+*.key
+
+# Python
+.venv/
+venv/
+**/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Local Qdrant embedded storage (rebuilt via: python -m backend.ingestion.run)
+CYRA-AI-Knowledge-Assistant/data/
+data/
+!**/src/data/
+
+# Logs and system files
+*.log
+.DS_Store
+Thumbs.db
+.aistudio/

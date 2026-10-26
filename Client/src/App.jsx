@@ -8,11 +8,14 @@ import {
   AlertTriangle,
   PlayCircle,
   ArrowRight,
+  Sparkles,
 } from 'lucide-react';
 import LandingPage from './components/LandingPage.jsx';
 import LoginPage from './components/LoginPage.jsx';
 import NewApplicationWizard from './components/NewApplicationWizard.jsx';
 import ApplicationDetailView from './components/ApplicationDetailView.jsx';
+import RagDocumentIntelligenceView from './components/RagDocumentIntelligenceView.jsx';
+import AicteRagAssistantModal from './components/AicteRagAssistantModal.jsx';
 
 import { AicteCrestIcon, StatusText } from './components/AicteEmblem.jsx';
 import {
@@ -40,7 +43,7 @@ export default function App() {
   const [institutionAccounts, setInstitutionAccounts] = useState([
     { ...INSTITUTION_PROFILE, password: 'AICTE-Portal-2026#' },
   ]);
-  const [activeNav, setActiveNav] = useState('dashboard'); // 'dashboard' | 'new_app' | 'applications' | 'detail' | 'docupass'
+  const [activeNav, setActiveNav] = useState('dashboard'); // 'dashboard' | 'new_app' | 'applications' | 'detail' | 'docupass' | 'rag_assistant'
   const [wizardCategoryId, setWizardCategoryId] = useState('eoa');
   const [applications, setApplications] = useState(INITIAL_APPLICATIONS);
 
@@ -49,6 +52,17 @@ export default function App() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [bannerNotice, setBannerNotice] = useState('');
+
+  // AICTE Saathi RAG Assistant Modal state
+  const [ragModalOpen, setRagModalOpen] = useState(false);
+  const [ragModalQuery, setRagModalQuery] = useState('');
+  const [ragModalClause, setRagModalClause] = useState('');
+
+  const handleOpenRagAssistant = (query = '', clause = '') => {
+    setRagModalQuery(query);
+    setRagModalClause(clause);
+    setRagModalOpen(true);
+  };
 
   const selectedApplication = useMemo(
     () => applications.find((a) => a.id === selectedApplicationId) || applications[0],
@@ -309,6 +323,7 @@ export default function App() {
       <LandingPage
         onNavigateLogin={handleNavigateLogin}
         onQuickStartCategory={handleQuickStartCategory}
+        onOpenRagAssistant={handleOpenRagAssistant}
         applications={applications}
       />
     );
@@ -399,6 +414,24 @@ export default function App() {
               </span>
               <span className="font-mono text-[11px] opacity-80">{applications.length}</span>
             </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveNav('rag_assistant')}
+              className={`w-full px-3.5 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-between transition-colors cursor-pointer ${
+                activeNav === 'rag_assistant'
+                  ? 'bg-blue-950 text-white'
+                  : 'text-slate-700 hover:bg-slate-100'
+              }`}
+            >
+              <span className="flex items-center gap-2.5">
+                <Sparkles className="w-4 h-4 text-amber-400" aria-hidden="true" />
+                <span>AI Regulatory Assistant</span>
+              </span>
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase bg-blue-500/20 text-blue-800 border border-blue-300">
+                RAG
+              </span>
+            </button>
           </nav>
         </div>
       </aside>
@@ -424,6 +457,7 @@ export default function App() {
               {activeNav === 'applications' && 'Application Queue'}
               {activeNav === 'detail' && selectedApplication?.id}
               {activeNav === 'docupass' && 'DocuPass Verification Vault'}
+              {activeNav === 'rag_assistant' && 'AICTE Regulatory Knowledge & RAG Intelligence Desk'}
             </span>
           </div>
 
@@ -939,12 +973,44 @@ export default function App() {
               onReuploadDocument={handleReuploadDocument}
               onOfficerAction={handleOfficerAction}
               onRunVerificationAnalysis={handleRunVerificationAnalysis}
+              onOpenRagAssistant={handleOpenRagAssistant}
             />
           )}
 
+          {/* VIEW 5: DEDICATED AICTE REGULATORY RAG INTELLIGENCE DESK */}
+          {activeNav === 'rag_assistant' && (
+            <RagDocumentIntelligenceView userRole={userRole} />
+          )}
 
         </main>
       </div>
+
+      {/* Global Floating AICTE Saathi RAG Assistant Launcher Button */}
+      <div className="fixed bottom-6 right-6 z-40">
+        <button
+          type="button"
+          onClick={() => handleOpenRagAssistant()}
+          className="group flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-blue-950 via-slate-900 to-slate-950 hover:from-blue-900 hover:to-slate-800 text-white rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 border border-blue-400/30 cursor-pointer transform hover:-translate-y-0.5"
+          title="Open AICTE Regulatory RAG Assistant"
+        >
+          <div className="relative">
+            <Sparkles className="w-4 h-4 text-blue-300 animate-pulse" />
+            <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full" />
+          </div>
+          <span className="text-xs font-bold font-display">Ask AICTE Saathi</span>
+          <span className="px-1.5 py-0.5 text-[9px] font-mono bg-blue-500/20 text-blue-300 border border-blue-400/30 rounded font-semibold">
+            RAG
+          </span>
+        </button>
+      </div>
+
+      {/* Global AICTE Saathi RAG Assistant Modal Drawer */}
+      <AicteRagAssistantModal
+        isOpen={ragModalOpen}
+        onClose={() => setRagModalOpen(false)}
+        initialQuery={ragModalQuery}
+        contextClause={ragModalClause}
+      />
     </div>
   );
 }
