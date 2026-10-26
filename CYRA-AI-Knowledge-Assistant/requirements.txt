@@ -13,3 +13,4 @@ pillow>=10.0
 langdetect>=1.0.9
 tiktoken>=0.7.0
 numpy
+sentence-transformers>=2.2.0
