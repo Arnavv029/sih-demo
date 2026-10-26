@@ -76,8 +76,9 @@ async def lifespan(app: FastAPI):
         from backend.retrieval import RetrievalService
         from backend.vector_store import VectorStore
 
-        logger.info("Loading embedding model BAAI/bge-m3 (first run downloads ~2 GB)...")
-        state.rag_embedding_model = EmbeddingModel("BAAI/bge-m3")
+        emb_model = os.getenv("EMBEDDING_MODEL", "lightweight" if (os.getenv("RENDER") or os.getenv("LOW_MEMORY", "true").lower() in ("true", "1")) else "BAAI/bge-m3")
+        logger.info("Initializing embedding model: %s", emb_model)
+        state.rag_embedding_model = EmbeddingModel(emb_model)
         state.rag_vector_store = VectorStore()
         state.rag_retrieval = RetrievalService(
             state.rag_embedding_model, state.rag_vector_store, require_scope=True

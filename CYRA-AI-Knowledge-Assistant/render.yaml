@@ -5,14 +5,18 @@ services:
     region: oregon
     plan: free
     branch: main
-    buildCommand: pip install -r requirements.txt && python -m backend.ingestion.run
-    startCommand: uvicorn backend.app:app --host 0.0.0.0 --port $PORT
+    buildCommand: pip install -r requirements.txt && python -m backend.ingestion.run --reset
+    startCommand: uvicorn backend.app:app --host 0.0.0.0 --port $PORT --workers 1
     envVars:
+      - key: LOW_MEMORY
+        value: "true"
       - key: FAST_EMBEDDING
         value: "true"
       - key: FAST_LLM
         value: "true"
+      - key: PROJECT_ID
+        value: "aicte"
       - key: PROJECT_SCOPE
-        value: aicte
+        value: "aicte"
       - key: GOOGLE_API_KEY
         sync: false

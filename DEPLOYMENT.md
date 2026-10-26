@@ -76,16 +76,18 @@ Vercel provides automatic SSL, global CDN edge caching, and instant Git deployme
 
 If you wish to host the dedicated Python FastAPI microservice alongside your frontend:
 
-### Option A: Render (Free Tier Web Service)
-1. In [render.com](https://render.com), click **"New Web Service"** and select your repository.
+### Option A: Render (Free Tier Web Service - 512MB RAM Safe)
+1. In [render.com](https://render.com), click **"New Web Service"** and select your repository `Arnavv029/sih-demo`.
 2. Configure settings:
    - **Root Directory**: `CYRA-AI-Knowledge-Assistant`
    - **Runtime**: `Python 3`
-   - **Build Command**: `pip install -r requirements.txt && python -m backend.ingestion.run`
-   - **Start Command**: `uvicorn backend.app:app --host 0.0.0.0 --port $PORT`
+   - **Build Command**: `pip install -r requirements.txt && python -m backend.ingestion.run --reset`
+   - **Start Command**: `uvicorn backend.app:app --host 0.0.0.0 --port $PORT --workers 1`
    - **Environment Variables**:
+     - `LOW_MEMORY`: `true` *(Crucial: Activates micro-embedding engine using < 35MB RAM, preventing 512Mi OOM crashes)*
      - `FAST_EMBEDDING`: `true`
      - `FAST_LLM`: `true`
+     - `PROJECT_ID`: `aicte`
      - `PROJECT_SCOPE`: `aicte`
      - `GOOGLE_API_KEY`: *(Optional: Your Google Gemini API Key)*
 3. Once deployed, copy your Render service URL (e.g., `https://aicte-cyra-rag.onrender.com`) and paste it as `VITE_RAG_API_URL` in your Vercel/Netlify frontend environment settings.

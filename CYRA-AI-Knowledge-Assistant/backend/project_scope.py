@@ -43,6 +43,7 @@ def validate_project_id(value: Optional[str]) -> str:
 
 
 def resolve_project_id(env: Optional[Mapping[str, str]] = None) -> str:
-    """Read and validate the configured project id (fail closed)."""
+    """Read and validate the configured project id (defaults to 'aicte')."""
     source = os.environ if env is None else env
-    return validate_project_id(source.get(PROJECT_ID_ENV))
+    val = source.get(PROJECT_ID_ENV) or source.get("PROJECT_SCOPE") or "aicte"
+    return validate_project_id(val)
